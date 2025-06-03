@@ -15,10 +15,10 @@ app.use('/auth',authRoutes)
 
 const __name = path.resolve()
 
-app.use(express.static(path.join(__name, "frontend", "build")));
+app.use(express.static(path.join(__name, "frontend", "dist")));
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__name,"frontend","build","index.html"));
+app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__name,"frontend","dist","index.html"));
 })
 
 

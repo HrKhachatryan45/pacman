@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poller+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import "tailwindcss";
+/*@config "../tailwind.config.js";*/
+@plugin "daisyui";
+
+ /*tailwind v4 theme works but not for colors  --color doenst work*/
+@theme {
+
+    --font-customOne: 'Lato', 'sans-serif';
+    --font-logo:'Poller One', 'sans-serif';
+    --font-rubik: 'Rubik', sans-serif;
+    --color-cyanG:#6FC8C1;
+    --color-lightGrey:#262626;
+    --color-darkGrey:#202020;
+    --color-greenC: #49cc90;
+    --color-yellowC: #edf845;
+    --color-blueC: #1336e2;
+    --color-redC: #f93e3e;
+    --color-violetC: #b886f4;
+
+}
+
+:root{
+    --color-greenC: #49cc90;
+    --color-yellowC: #edf845;
+    --color-blueC: #1336e2;
+    --color-redC: #f93e3e;
+    --color-violetC: #b886f4;
+}

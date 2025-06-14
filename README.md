@@ -1,6 +1,6 @@
-# PACMAN
+# 👻 Pacman
 
-*Empower Your API Testing, Accelerate Innovation*
+Postman clone to test your own app’s API requests. Clone it, use it for local development, or try the online demo now!
 
 ![last-commit](https://img.shields.io/github/last-commit/HrKhachatryan45/pacman?style=flat&logo=git&logoColor=white&color=0080ff)
 ![repo-top-language](https://img.shields.io/github/languages/top/HrKhachatryan45/pacman?style=flat&color=0080ff)
@@ -32,6 +32,7 @@
   - [Installation](#installation)
   - [Usage](#usage)
   - [Testing](#testing)
+- [Live Demo](#live-demo)
 
 ---
 
@@ -48,6 +49,10 @@ This project simplifies API validation and development with features like:
 - 🔒 **Secure Authentication:** Implements JWT, Google OAuth, and secure cookie management for user sessions.
 - ⚡ **Real-Time Data Sync:** Uses Redis caching and context-driven state management for instant updates.
 - 🛠️ **Modular Architecture:** Designed for scalability, supporting complex workflows and integrations.
+
+### 🌐 Live Demo
+
+Check it out live: [https://pacman-iynf.onrender.com](https://pacman-iynf.onrender.com)
 
 ---
 

@@ -52,7 +52,7 @@ This project simplifies API validation and development with features like:
 
 ### 🌐 Live Demo
 
-Check it out live: [https://pacman-iynf.onrender.com](https://pacman-iynf.onrender.com)
+Check it out live: [https://pacman-iynf.onrender.com](https://pacman-iynf.onrender.com) P.S. it might take 2-3 mins to open !
 
 ---
 

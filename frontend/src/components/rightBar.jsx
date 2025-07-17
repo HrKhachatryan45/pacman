@@ -129,59 +129,36 @@ const RightBar = () => {
     const [arrOfHeaders,setArrOfHeaders] =useState( [])
 
 
-    useEffect(() => {
-        const [_, search] = currentRequest.url?.split('?') || [];
-        const params = new URLSearchParams(search || '');
+useEffect(() => {
+    let someArr = [];
 
-        const someArr = [];
+    // Ensure that only 'Content-Type' header is present, and it's set to 'application/json'
+    const headers = { 'Content-Type': 'application/json' };  // Only add the Content-Type header
 
-        for (const [key, value] of params.entries()) {
-            someArr.push({ id: someArr.length, key, value });
-        }
+    // Convert the headers object into array format for table display
+    Object.entries(headers).forEach(([key, value], index) => {
+        someArr.push({ id: index, key, value });
+    });
 
+    // Ensure empty row at the end
+    if (someArr.length === 0 || someArr[someArr.length - 1].key !== '' || someArr[someArr.length - 1].value !== '') {
+        someArr.push({ id: someArr.length, key: '', value: '' });
+    }
 
+    setArrOfHeaders(someArr);
 
-        // Always ensure at least one empty row exists
-        if (someArr.length === 0 || someArr[someArr.length - 1].key !== '' || someArr[someArr.length - 1].value !== '') {
-            someArr.push({ id: someArr.length, key: '', value: '' });
-        }
+    // Update the currentRequest with only the Content-Type header
+    const updatedRequest = { ...currentRequest, headers };
 
-        setArrOfTr(someArr);
+    // Update selectedRequests in state and localStorage
+    const updatedRequests = selectedRequests.map((r) =>
+        r.id === updatedRequest.id ? updatedRequest : r
+    );
+    setSelectedRequests(updatedRequests);
+    localStorage.setItem('selectedRequests', JSON.stringify(updatedRequests));
 
-    }, [currentRequest.url]);
+}, [currentRequest.id]);
 
-    useEffect(() => {
-        let someArr = [];
-
-        const headers = { ...(currentRequest.headers || {}) };
-
-        // Add Content-Type if it's missing
-        if (!headers['Content-Type']) {
-            headers['Content-Type'] = 'application/json';
-
-            const updatedRequest = { ...currentRequest, headers };
-            setCurrentRequest(updatedRequest);
-
-            const updatedRequests = selectedRequests.map((r) =>
-                r.id === updatedRequest.id ? updatedRequest : r
-            );
-
-            setSelectedRequests(updatedRequests);
-            localStorage.setItem('selectedRequests', JSON.stringify(updatedRequests));
-        }
-
-        // Convert headers object into array format for table display
-        Object.entries(headers).forEach(([key, value], index) => {
-            someArr.push({ id: index, key, value });
-        });
-
-        // Ensure empty row at end
-        if (someArr.length === 0 || someArr[someArr.length - 1].key !== '' || someArr[someArr.length - 1].value !== '') {
-            someArr.push({ id: someArr.length, key: '', value: '' });
-        }
-
-        setArrOfHeaders(someArr);
-    }, [currentRequest.id]);
 
 
     const handleAddQuery = (ev,id) => {
@@ -292,6 +269,22 @@ const RightBar = () => {
         console.log(data)
     }
 
+    useEffect(() => {
+    // Sync Query Params with the URL
+    const params = new URLSearchParams(currentRequest.url.split('?')[1] || '');
+    let updatedArrOfTr = [];
+
+    params.forEach((value, key) => {
+      updatedArrOfTr.push({ id: updatedArrOfTr.length, key, value });
+    });
+
+    // Ensure an empty row is available to input new params
+    if (updatedArrOfTr.length === 0 || updatedArrOfTr[updatedArrOfTr.length - 1].key !== '' || updatedArrOfTr[updatedArrOfTr.length - 1].value !== '') {
+      updatedArrOfTr.push({ id: updatedArrOfTr.length, key: '', value: '' });
+    }
+
+    setArrOfTr(updatedArrOfTr);
+  }, [currentRequest.url]);
 
 
 
@@ -338,7 +331,7 @@ const RightBar = () => {
                     {!loading?'Send':<span className={'loading loading-bars loading-md'}></span>}
                 </button>
             </form>
-
+     
             <div className={'w-full h-[35%] border-b-1 border-gray-500 px-4'}>
                 <section className={'w-full h-[10%]   flex items-center mt-2 justify-start'}>
                     <div className={`w-fit px-2 py-1 mr-2 font-rubik cursor-pointer ${selectedSection === 'Params'?'border-b-2 border-redC':''}`} onClick={() => setSelectedSection('Params')}>Params</div>
@@ -347,53 +340,50 @@ const RightBar = () => {
                 </section>
                 {selectedSection === 'Params' && <div className={'w-full h-[90%] flex flex-col items-start justify-start pt-2 '}>
                     <h4>Query Params</h4>
-                    <section className={'w-full h-full overflow-y-auto pb-5'}>
-                        <table className={'w-full h-fit border-gray-500 border mt-2 '}>
-                         <tbody>
-                         <tr className={'border-1 border-gray-500 h-8'}>
-                             <td className={'border-1 border-gray-500 w-[6%]'}></td>
-                             <td className={'border-1 border-gray-500 pl-2'}>Key</td>
-                             <td className={'border-1 border-gray-500 pl-2'}>Value</td>
-                             <td className={'border-1 border-gray-500 w-[10%]'}></td>
-                         </tr>
-                         {arrOfTr.map((tr) => (
-                             <tr className="border-1 border-gray-500 h-8" key={tr.id}>
-                                 <td className="border border-gray-500 w-[6%]"></td>
-                                 <td className="border border-gray-500 pl-2 ">
-                                     <input
-                                         type="text"
-                                         value={tr.key}
-                                         onChange={(ev) => handleAddQuery(ev, tr.id)}
-                                         name={'key'}
-                                         className="w-full text-white bg-transparent outline-none focus:outline-none border-none focus:ring-0"
-                                         placeholder="Enter Key"
-                                     />
-                                 </td>
-                                 <td className="border-1 border-gray-500 pl-2 ">
-                                     <input
-                                         type="text"
-                                         value={tr.value}
-                                         onChange={(ev) => handleAddQuery(ev, tr.id)}
-                                         name={'value'}
-                                         className="w-full text-white bg-transparent outline-none focus:outline-none border-none focus:ring-0"
-                                         placeholder="Enter Value"
-                                     />
-                                 </td>
-                                 <td className={' border-1 border-gray-500 w-[10%] '}>
-                                     <div className="w-full flex items-center justify-center">
-                                         {currentRequest?.url?.split('?')[1] && tr.key !== "" && tr.value !== '' && currentRequest.url.split('?')[1].includes(`${tr.key}=${tr.value}`) ?
-                                             <button className="btn h-8"
-                                                     onClick={() => handleRemoveKey(tr)}>Remove</button> :
-                                             <button className="btn h-8"
-                                                     onClick={() => handleAddKey(tr.id)}>Add</button>}
-                                     </div>
-                                 </td>
-                             </tr>
-                         ))}
-
-                         </tbody>
-                        </table>
-                    </section>
+          <section className={'w-full h-full overflow-y-auto pb-5'}>
+            <table className={'w-full h-fit border-gray-500 border mt-2'}>
+              <tbody>
+                <tr className={'border-1 border-gray-500 h-8'}>
+                  <td className={'border-1 border-gray-500 w-[6%]'}></td>
+                  <td className={'border-1 border-gray-500 pl-2'}>Key</td>
+                  <td className={'border-1 border-gray-500 pl-2'}>Value</td>
+                  <td className={'border-1 border-gray-500 w-[10%]'}></td>
+                </tr>
+                {arrOfTr.map((tr) => (
+                  <tr className="border-1 border-gray-500 h-8" key={tr.id}>
+                    <td className="border border-gray-500 w-[6%]"></td>
+                    <td className="border border-gray-500 pl-2">
+                      <input
+                        type="text"
+                        value={tr.key}
+                        onChange={(ev) => handleAddQuery(ev, tr.id)}
+                        name={'key'}
+                        className="w-full text-white bg-transparent outline-none focus:outline-none border-none focus:ring-0"
+                        placeholder="Enter Key"
+                      />
+                    </td>
+                    <td className="border-1 border-gray-500 pl-2">
+                      <input
+                        type="text"
+                        value={tr.value}
+                        onChange={(ev) => handleAddQuery(ev, tr.id)}
+                        name={'value'}
+                        className="w-full text-white bg-transparent outline-none focus:outline-none border-none focus:ring-0"
+                        placeholder="Enter Value"
+                      />
+                    </td>
+                    <td className={'border-1 border-gray-500 w-[10%]'}>
+                      <div className="w-full flex items-center justify-center">
+                        {currentRequest?.url?.split('?')[1] && tr.key !== "" && tr.value !== '' && currentRequest.url.split('?')[1].includes(`${tr.key}=${tr.value}`) ?
+                          <button className="btn h-8" onClick={() => handleRemoveKey(tr)}>Remove</button> :
+                          <button className="btn h-8" onClick={() => handleAddKey(tr.id)}>Add</button>}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
                 </div>}
                 {selectedSection === "Body" && <div className={'w-full h-[90%] flex flex-col items-start justify-start pt-2 '}>
                     <CodeMirror

@@ -269,22 +269,28 @@ useEffect(() => {
         console.log(data)
     }
 
-    useEffect(() => {
-    // Sync Query Params with the URL
-    const params = new URLSearchParams(currentRequest.url.split('?')[1] || '');
-    let updatedArrOfTr = [];
+ useEffect(() => {
+  const url = currentRequest.url || '';  // Safeguard for undefined or null URL
 
-    params.forEach((value, key) => {
-      updatedArrOfTr.push({ id: updatedArrOfTr.length, key, value });
-    });
+  // Ensure there is a valid URL to work with
+  const [baseUrl, search] = url.split('?');
 
-    // Ensure an empty row is available to input new params
-    if (updatedArrOfTr.length === 0 || updatedArrOfTr[updatedArrOfTr.length - 1].key !== '' || updatedArrOfTr[updatedArrOfTr.length - 1].value !== '') {
-      updatedArrOfTr.push({ id: updatedArrOfTr.length, key: '', value: '' });
-    }
+  let updatedArrOfTr = [];
 
-    setArrOfTr(updatedArrOfTr);
-  }, [currentRequest.url]);
+  // Use URLSearchParams to work with the query parameters
+  const params = new URLSearchParams(search || '');
+
+  params.forEach((value, key) => {
+    updatedArrOfTr.push({ id: updatedArrOfTr.length, key, value });
+  });
+
+  // Ensure an empty row is available to input new params
+  if (updatedArrOfTr.length === 0 || updatedArrOfTr[updatedArrOfTr.length - 1].key !== '' || updatedArrOfTr[updatedArrOfTr.length - 1].value !== '') {
+    updatedArrOfTr.push({ id: updatedArrOfTr.length, key: '', value: '' });
+  }
+
+  setArrOfTr(updatedArrOfTr);
+}, [currentRequest.url]);
 
 
 

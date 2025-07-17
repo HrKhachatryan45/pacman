@@ -2,13 +2,13 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    client: 'mysql2',
+    client: 'pg', // Use 'pg' for PostgreSQL
     connection: {
-      host: process.env.MYSQL_HOST,
-      user: process.env.MYSQLUSER,
-      password: process.env.MYSQLPASSWORD,
-      database: 'sql7782817',
-      port: 3306,
+      host: process.env.PSQL_HOST,
+      user: process.env.PSQL_USER,
+      password: process.env.PSQL_PASSWORD,
+      database: process.env.PSQL_DATABASE,
+      port: process.env.PSQL_PORT , // Default PostgreSQL port
     },
     migrations: {
       directory: './migrations'
@@ -18,13 +18,13 @@ module.exports = {
     }
   },
   production: {
-    client: 'mysql2',
+    client: 'pg', // Use 'pg' for PostgreSQL
     connection: {
-      host: process.env.MYSQL_HOST,
-      user: process.env.MYSQLUSER,
-      password: process.env.MYSQLPASSWORD,
-      database: 'sql7782817',
-      port: 3306,
+      host: process.env.PSQL_HOST,
+      user: process.env.PSQL_USER,
+      password: process.env.PSQL_PASSWORD,
+      database: process.env.PSQL_DATABASE,
+      port: process.env.PSQL_PORT , // Default PostgreSQL port
     },
     migrations: {
       directory: './migrations'

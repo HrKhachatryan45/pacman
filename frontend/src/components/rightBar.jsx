@@ -32,6 +32,25 @@ const RightBar = () => {
         setCurrentRequest(selectedRequests?.find((request) => request.current) || {})
     }, [selectedRequests,setAuthUser,setSelectedRequests]);
 
+    useEffect(() => {
+    if (currentRequest.method === "GET" && currentRequest.body !== "" ) {
+        const updatedRequest = { ...currentRequest, body: "" };
+
+        // Update currentRequest
+        setCurrentRequest(updatedRequest);
+
+        // Update selectedRequests to keep the state in sync
+        const newSelectedRequests = selectedRequests.map((request) =>
+            request.id === updatedRequest.id ? updatedRequest : request
+        );
+        setSelectedRequests(newSelectedRequests);
+
+        // Save updated state to localStorage
+        localStorage.setItem("selectedRequests", JSON.stringify(newSelectedRequests));
+    }
+}, [currentRequest, selectedRequests]);
+
+
 
     const handleSelect = (id) => {
         let requests = JSON.parse(localStorage.getItem('selectedRequests')) || [];
@@ -272,6 +291,7 @@ const RightBar = () => {
         await sendRequest(currentRequest.url,currentRequest.method,currentRequest.headers,parsedBody)
         console.log(data)
     }
+
 
 
 
